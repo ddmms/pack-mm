@@ -136,6 +136,7 @@ def pack_molecules(
     T: float,
     ntries: int,
     geometry: bool,
+    fmax: float,
     ca: float,
     cb: float,
     cc: float,
@@ -249,11 +250,11 @@ def pack_molecules(
             write(f"{sysname}+{i + 1}{Path(molecule).stem}.cif", csys)
         else:
             print(f"Failed to insert particle {i + 1} after {ntries} tries")
-            optimize_geometry(f"{sysname}+{i + 1}{Path(molecule).stem}.cif", device, model, e)
+            optimize_geometry(f"{sysname}+{i + 1}{Path(molecule).stem}.cif", device, arch, model, fmax)
 
     # Perform final geometry optimization if requested
     if geometry:
-        optimize_geometry(f"{sysname}+{nmols}{Path(molecule).stem}.cif", device, model, e)
+        optimize_geometry(f"{sysname}+{nmols}{Path(molecule).stem}.cif", device, arch, model, fmax)
 
 
 def load_molecule(molecule: str):
@@ -295,19 +296,16 @@ def rotate_molecule(mol):
     return mol
 
 
-def optimize_geometry(struct_path: str, device: str, model: str, e: float):
+def optimize_geometry(struct_path: str, device: str, arch: str, model: str, fmax: float):
     """Optimize the geometry of a structure."""
     geo = GeomOpt(
         struct_path=struct_path,
         device=device,
+        fmax=fmax,
         calc_kwargs={'model_paths': model, 'default_dtype': 'float64'},
         filter_kwargs={"hydrostatic_strain": True},
     )
     geo.run()
     write(f"{struct_path}-opt.cif", geo.struct)
     return geo.struct.get_potential_energy()
-
-
-if __name__ == "__main__":
-    packme()
 

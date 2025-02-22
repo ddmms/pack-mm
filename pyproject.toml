@@ -26,7 +26,7 @@ dependencies = [
 
 
 [project.scripts]
-janus = "pack_me.cli.packme:app"
+packme = "pack_me.cli.packme:app"
 
 [project.urls]
 Repository = "https://github.com/ddmms/pack-me/"
