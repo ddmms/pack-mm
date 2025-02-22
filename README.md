@@ -42,6 +42,22 @@
 
 ### MOF ellipsoid
 
+first add a methanol
+
+```bash
+
+packmm --system examples/data/Cu2L.cif --molecule examples/data/Ethanol.xyz --nmols 1  --where sphere --centre 5.18,8.15,25.25 --radius 1 --model small-0b2 --geometry
+
+
+```
+
+``` bash
+
+packmm --system Cu2L-ethanol.cif --molecule H2O --nmols 10  --where ellipsoid --centre 5.18,8.15,25.25 --a 5.18 --b 8.15 --c 8.25 --no-geometry --model small-0b2
+
+
+```
+
 
 ### full list of options
 

@@ -358,5 +358,5 @@ def optimize_geometry(
         filter_kwargs={"hydrostatic_strain": True},
     )
     geo.run()
-    write(Path(out_path) / f"{struct_path}-opt.cif", geo.struct)
+    write(Path(out_path) / f"{Path(struct_path).stem}-opt.cif", geo.struct)
     return geo.struct.get_potential_energy()
