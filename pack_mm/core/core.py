@@ -138,28 +138,29 @@ def validate_value(label, x):
 
 
 def pack_molecules(
-    system: str | None,
-    molecule: str,
-    nmols: int,
-    arch: str,
-    model: str,
-    device: str,
-    where: str,
-    center: tuple[float, float, float] | None,
-    radius: float | None,
-    height: float | None,
-    a: float | None,
-    b: float | None,
-    c: float | None,
-    seed: int,
-    temperature: float,
-    ntries: int,
-    geometry: bool,
-    fmax: float,
-    ca: float,
-    cb: float,
-    cc: float,
-) -> None:
+    system: str = None,
+    molecule: str = "H2O",
+    nmols: int = -1,
+    arch: str = "cpu",
+    model: str = "mace_mp",
+    device: str = "medium-omat-0",
+    where: str = "anywhere",
+    center: tuple[float, float, float] = None,
+    radius: float = None,
+    height: float = None,
+    a: float = None,
+    b: float = None,
+    c: float = None,
+    seed: int = 2025,
+    temperature: float = 300.0,
+    ntries: int = 50,
+    geometry: bool = False,
+    fmax: float = 0.1,
+    cell_a: float = None,
+    cell_b: float = None,
+    cell_c: float = None,
+    out_path: str = ".",
+) -> float:
     """
     Pack molecules into a system based on the specified parameters.
 
@@ -181,7 +182,8 @@ def pack_molecules(
         temperature (float): Temperature in Kelvin for acceptance probability.
         ntries (int): Maximum number of attempts to insert each molecule.
         geometry (bool): Whether to perform geometry optimization after insertion.
-        ca, cb, cc (float): Cell dimensions if system is empty.
+        cell_a, cell_b, cell_c (float): Cell dimensions if system is empty.
+        out_path (str): path to save various outputs
     """
     kbt = temperature * 8.6173303e-5  # Boltzmann constant in eV/K
     validate_value("temperature", temperature)
@@ -193,10 +195,10 @@ def pack_molecules(
     validate_value("box b", b)
     validate_value("box c", c)
     validate_value("ntries", ntries)
-    validate_value("cell box a", ca)
-    validate_value("cell box b", cb)
+    validate_value("cell box cell a", cell_a)
+    validate_value("cell box cell b", cell_b)
     validate_value("nmols", nmols)
-    validate_value("cell box c", cc)
+    validate_value("cell box cell c", cell_c)
 
     random.seed(seed)
 
@@ -204,25 +206,21 @@ def pack_molecules(
         sys = read(system)
         sysname = Path(system).stem
     except Exception:
-        sys = Atoms(cell=[ca, cb, cc], pbc=[True, True, True])
+        sys = Atoms(cell=[cell_a, cell_b, cell_c], pbc=[True, True, True])
         sysname = "empty"
 
     cell = sys.cell.lengths()
 
-    # Print initial information
+    # Print summary
     print(f"Inserting {nmols} {molecule} molecules in {sysname}.")
     print(f"Using {arch} model {model} on {device}.")
     print(f"Insert in {where}.")
 
-    # Set center of insertion region
     if center is None:
         center = (cell[0] * 0.5, cell[1] * 0.5, cell[2] * 0.5)
-    else:
-        center = tuple(ci * cell[i] for i, ci in enumerate(center))
 
-    # Set parameters based on insertion region
     if where == "anywhere":
-        a, b, c = 1, 1, 1
+        a, b, c = cell[0], cell[1], cell[2]
     elif where == "sphere":
         if radius is None:
             radius = min(cell) * 0.5
@@ -230,20 +228,22 @@ def pack_molecules(
         if radius is None:
             if where == "cylinderZ":
                 radius = min(cell[0], cell[1]) * 0.5
+                if height is None:
+                    height = 0.5 * cell[2]
             elif where == "cylinderY":
                 radius = min(cell[0], cell[2]) * 0.5
+                if height is None:
+                    height = 0.5 * cell[1]
             elif where == "cylinderX":
                 radius = min(cell[2], cell[1]) * 0.5
-        if height is None:
-            height = 0.5
+                if height is None:
+                    height = 0.5 * cell[0]
     elif where == "box":
-        a, b, c = a or 1, b or 1, c or 1
+        a, b, c = a or cell[0], b or cell[1], c or cell[2]
     elif where == "ellipsoid":
-        a, b, c = a or 0.5, b or 0.5, c or 0.5
+        a, b, c = a or cell[0], b or cell[1], c or cell[2]
 
-    calc = choose_calculator(
-        arch=arch, model_path=model, device=device, default_dtype="float64"
-    )
+    calc = choose_calculator(arch=arch, model_path=model, device=device)
     sys.calc = calc
 
     e = sys.get_potential_energy() if len(sys) > 0 else 0.0
@@ -253,7 +253,7 @@ def pack_molecules(
         accept = False
         for _itry in range(ntries):
             mol = load_molecule(molecule)
-            tv = get_insertion_position(where, center, cell, a, b, c, radius, height)
+            tv = get_insertion_position(where, center, a, b, c, radius, height)
             mol = rotate_molecule(mol)
             mol.translate(tv)
 
@@ -274,18 +274,31 @@ def pack_molecules(
             csys = tsys.copy()
             e = en
             print(f"Inserted particle {i + 1}")
-            write(f"{sysname}+{i + 1}{Path(molecule).stem}.cif", csys)
+            write(Path(out_path) / f"{sysname}+{i + 1}{Path(molecule).stem}.cif", csys)
         else:
+            # Things are bad, maybe geomatry optimisation saves us
             print(f"Failed to insert particle {i + 1} after {ntries} tries")
-            optimize_geometry(
-                f"{sysname}+{i + 1}{Path(molecule).stem}.cif", device, arch, model, fmax
+            _ = optimize_geometry(
+                f"{sysname}+{i + 1}{Path(molecule).stem}.cif",
+                device,
+                arch,
+                model,
+                fmax,
+                out_path,
             )
+    energy_final = e
 
     # Perform final geometry optimization if requested
     if geometry:
-        optimize_geometry(
-            f"{sysname}+{nmols}{Path(molecule).stem}.cif", device, arch, model, fmax
+        energy_final = optimize_geometry(
+            f"{sysname}+{nmols}{Path(molecule).stem}.cif",
+            device,
+            arch,
+            model,
+            fmax,
+            out_path,
         )
+    return energy_final
 
 
 def load_molecule(molecule: str):
@@ -299,25 +312,24 @@ def load_molecule(molecule: str):
 def get_insertion_position(
     where: str,
     center: tuple[float, float, float],
-    cell: list[float],
-    a: float,
-    b: float,
-    c: float,
-    radius: float | None,
-    height: float | None,
+    a: float = None,
+    b: float = None,
+    c: float = None,
+    radius: float = None,
+    height: float = None,
 ) -> tuple[float, float, float]:
     """Get a random insertion position based on the region."""
     if where == "sphere":
         return random_point_in_sphere(center, radius)
     if where == "box":
-        return random_point_in_box(center, cell[0] * a, cell[1] * b, cell[2] * c)
+        return random_point_in_box(center, a, b, c)
     if where == "ellipsoid":
-        return random_point_in_ellipsoid(center, cell[0] * a, cell[1] * b, cell[2] * c)
+        return random_point_in_ellipsoid(center, a, b, c)
     if where in ["cylinderZ", "cylinderY", "cylinderX"]:
         axis = where[-1].lower()
-        return random_point_in_cylinder(center, radius, cell[2] * height, axis)
+        return random_point_in_cylinder(center, radius, height, axis)
     # now is anywhere
-    return random.random(3) * [a, b, c] * cell
+    return random.random(3) * [a, b, c]
 
 
 def rotate_molecule(mol):
@@ -330,16 +342,21 @@ def rotate_molecule(mol):
 
 
 def optimize_geometry(
-    struct_path: str, device: str, arch: str, model: str, fmax: float
+    struct_path: str,
+    device: str,
+    arch: str,
+    model: str,
+    fmax: float,
+    out_path: str = ".",
 ) -> float:
     """Optimize the geometry of a structure."""
     geo = GeomOpt(
         struct_path=struct_path,
         device=device,
         fmax=fmax,
-        calc_kwargs={"model_paths": model, "default_dtype": "float64"},
+        calc_kwargs={"model_paths": model},
         filter_kwargs={"hydrostatic_strain": True},
     )
     geo.run()
-    write(f"{struct_path}-opt.cif", geo.struct)
+    write(Path(out_path) / f"{struct_path}-opt.cif", geo.struct)
     return geo.struct.get_potential_energy()

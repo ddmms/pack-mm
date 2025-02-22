@@ -3,7 +3,7 @@
 # Author; alin m elena, alin@elena.re
 # Contribs;
 # Date: 22-02-2025
-# ©alin m elena, GPL v3 https://www.gnu.org/licenses/gpl-3.0.en.html
+# ©alin m elena,
 from __future__ import annotations
 
 from typer.testing import CliRunner

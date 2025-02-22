@@ -52,30 +52,28 @@ def packmm(
     ),
     centre: str | None = typer.Option(
         None,
-        help="""Centre of the insertion zone in fractional coordinates,
-        e.g., '0.12,0.4,0.5'.""",
+        help="""Centre of the insertion zone, coordinates in Å,
+        e.g., '5.0, 5.0, 5.0'.""",
     ),
     radius: float | None = typer.Option(
         None,
         help="""Radius of the sphere or cylinder in Å,
         depending on the insertion volume.""",
     ),
-    height: float | None = typer.Option(
-        None, help="Height of the cylinder in fractional coordinates."
-    ),
+    height: float | None = typer.Option(None, help="Height of the cylinder in Å."),
     a: float | None = typer.Option(
         None,
-        help="""Side of the box or semi-axis of the ellipsoid, fractional,
+        help="""Side of the box or semi-axis of the ellipsoid, in Å,
         depends on the insertion method.""",
     ),
     b: float | None = typer.Option(
         None,
-        help="""Side of the box or semi-axis of the ellipsoid, fractional,
+        help="""Side of the box or semi-axis of the ellipsoid, in Å,
         depends on the insertion method.""",
     ),
     c: float | None = typer.Option(
         None,
-        help="""Side of the box or semi-axis of the ellipsoid, fractional,
+        help="""Side of the box or semi-axis of the ellipsoid, in Å,
         depends on the insertion method.""",
     ),
     device: str = typer.Option(
@@ -86,15 +84,22 @@ def packmm(
     temperature: float = typer.Option(
         300.0, help="Temperature for the Monte Carlo acceptance rule."
     ),
-    cell_a: float = typer.Option(20.0, help="Side of the empty box along the x-axis."),
-    cell_b: float = typer.Option(20.0, help="Side of the empty box along the y-axis."),
-    cell_c: float = typer.Option(20.0, help="Side of the empty box along the z-axis."),
+    cell_a: float = typer.Option(
+        20.0, help="Side of the empty box along the x-axis in Å."
+    ),
+    cell_b: float = typer.Option(
+        20.0, help="Side of the empty box along the y-axis in Å."
+    ),
+    cell_c: float = typer.Option(
+        20.0, help="Side of the empty box along the z-axis in Å."
+    ),
     fmax: float = typer.Option(
         0.1, help="force tollerance for optimisation if needed."
     ),
     geometry: bool = typer.Option(
         True, help="Perform geometry optimization at the end."
     ),
+    out_path: str = typer.Option(".", help="path to save various outputs."),
 ):
     """Pack molecules into a system based on the specified parameters."""
     print("Script called with following input")
@@ -119,6 +124,7 @@ def packmm(
     print(f"{temperature=}")
     print(f"{fmax=}")
     print(f"{geometry=}")
+    print(f"{out_path=}")
     if nmols == -1:
         print("nothing to do, no molecule to insert")
         raise typer.Exit(0)
@@ -151,9 +157,10 @@ def packmm(
         ntries=ntries,
         fmax=fmax,
         geometry=geometry,
-        ca=cell_a,
-        cb=cell_b,
-        cc=cell_c,
+        cell_a=cell_a,
+        cell_b=cell_b,
+        cell_c=cell_c,
+        out_path=out_path,
     )
 
 
