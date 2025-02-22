@@ -128,6 +128,11 @@ def random_point_in_cylinder(
 
     return (x, y, z)
 
+def validate_value(label,x):
+    if x is not None  and x <= 0.0:
+        err = f"Invalid {label}, needs to be positive"
+        print(err)
+        raise  Exception(err)
 
 def pack_molecules(
     system: str | None,
@@ -176,6 +181,14 @@ def pack_molecules(
         ca, cb, cc (float): Cell dimensions if system is empty.
     """
     kbt = temperature * 8.6173303e-5  # Boltzmann constant in eV/K
+    validate_value("temperature", temperature)
+    validate_value("radius", radius)
+    validate_value("height", height)
+    validate_value("fmax", fmax)
+    validate_value("seed", seed)
+    validate_value("box a", a)
+    validate_value("box b", b)
+    validate_value("box c", c)
 
     random.seed(seed)
 
