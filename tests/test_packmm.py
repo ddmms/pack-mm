@@ -87,6 +87,14 @@ def test_packmm_mlip():
     assert "model='some'" in strip_ansi_codes(result.output)
     assert "device='cuda'" in strip_ansi_codes(result.output)
 
+def test_packmm_out_path():
+    """Check out_path."""
+    result = runner.invoke(
+        app, ["--out-path", "out"]
+    )
+    assert result.exit_code == 0
+    assert "out_path='out'" in strip_ansi_codes(result.output)
+
 
 def test_packmm_custom_box_dimensions():
     """Check box."""
