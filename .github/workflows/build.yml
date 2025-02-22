@@ -37,15 +37,10 @@ jobs:
         PYTEST_ADDOPTS: "--durations=0"
       run: uv run pytest --cov pack_mm --cov-append .
 
-  coverage:
-    needs: tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Close parallel build
-        uses: coverallsapp/github-action@v2.3.6
-        with:
-          flag-name: run-${{ join(matrix.*, '-') }}
-          parallel: true
+    - name: Close parallel build
+      uses: coverallsapp/github-action@v2.3.6
+      with:
+        parallel: true
 
   pre-commit:
     runs-on: ubuntu-latest
