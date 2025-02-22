@@ -12,6 +12,13 @@
    uv pip install pack-mm
 
 ```
+or install the lates
+
+```bash
+
+  uv pip install git+https://github.com/ddmms/pack-mm.git
+
+```
 
 ## CLI examples
 
@@ -23,6 +30,8 @@
    packmm --system examples/data/UiO-66.cif --molecule H2O --nmols 10  --where sphere --centre 10.0,10.0,10.0 --radius 5.0 --geometry
 
 ```
+
+![](examples/pics/UiO66water.png)
 
 ### Zeolite in cylindrical channel
 
