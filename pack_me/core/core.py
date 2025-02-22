@@ -1,7 +1,7 @@
 # Author; alin m elena, alin@elena.re
 # Contribs;
 # Date: 16-11-2024
-# ©alin m elena, GPL v3 https://www.gnu.org/licenses/gpl-3.0.en.html
+# ©alin m elena,
 """pack molecules inside various shapes."""
 
 from __future__ import annotations
