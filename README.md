@@ -42,12 +42,16 @@ or install the lates
 
 ```
 
+![](examples/pics/MFIwater.png)
+
 ### NaCl on surface
 
 ```bash
    packmm --system examples/data/NaCl.cif --molecule H2O --nmols 30  --where box --centre 8.5,8.5,16.0 --a 16.9 --b 16.9 --c 7.5 --no-geometry
 
 ```
+
+![](examples/pics/NaClwater.png)
 
 ### MOF ellipsoid
 
