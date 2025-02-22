@@ -1,7 +1,7 @@
 [project]
-name = "pack-me"
-version = "0.0.10"
-description = "packing molecules in boxes using for machine learnt interatomic potentials"
+name = "pack-mm"
+version = "0.0.11"
+description = "packing materials and molecules in boxes using for machine learnt interatomic potentials"
 authors = [
     { name = "Alin M. Elena" },
 ]
@@ -26,7 +26,7 @@ dependencies = [
 
 
 [project.scripts]
-packme = "pack_me.cli.packme:app"
+packmm = "pack_mm.cli.packmm:app"
 
 [project.urls]
 Repository = "https://github.com/ddmms/pack-me/"
@@ -75,7 +75,7 @@ pythonpath = ["."]
 [tool.coverage.run]
 # Configuration of [coverage.py](https://coverage.readthedocs.io)
 # reporting which lines of your plugin are covered by tests
-source=["pack_me"]
+source=["pack_mm"]
 
 [tool.ruff]
 exclude = ["conf.py", "*ipynb"]

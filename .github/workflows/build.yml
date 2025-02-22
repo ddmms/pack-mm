@@ -35,7 +35,7 @@ jobs:
       env:
         # show timings of tests
         PYTEST_ADDOPTS: "--durations=0"
-      run: uv run pytest --cov pack_me --cov-append .
+      run: uv run pytest --cov pack_mm --cov-append .
 
   coverage:
     needs: tests

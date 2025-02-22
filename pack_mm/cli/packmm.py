@@ -1,4 +1,4 @@
-"""Command line for packme."""
+"""Command line for packmm."""
 
 # Author; alin m elena, alin@elena.re
 # Contribs;
@@ -10,7 +10,7 @@ from enum import Enum
 
 import typer
 
-from pack_me.core.core import pack_molecules
+from pack_mm.core.core import pack_molecules
 
 
 class InsertionMethod(str, Enum):
@@ -29,7 +29,7 @@ app = typer.Typer(no_args_is_help=True)
 
 
 @app.command()
-def packme(
+def packmm(
     system: str | None = typer.Option(
         None,
         help="""The original box in which you want to add particles.

@@ -9,7 +9,7 @@ on:
 jobs:
   build-docs:
     runs-on: ubuntu-latest
-    if: github.repository == 'ddmms/pack-me' && startsWith(github.ref, 'refs/tags/v')
+    if: github.repository == 'ddmms/pack-mm' && startsWith(github.ref, 'refs/tags/v')
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -52,7 +52,7 @@ jobs:
   publish:
     needs: build-docs
     runs-on: ubuntu-latest
-    if: github.repository == 'ddmms/pack-me' && startsWith(github.ref, 'refs/tags/v')
+    if: github.repository == 'ddmms/pack-mm' && startsWith(github.ref, 'refs/tags/v')
     environment:
       name: release
     permissions:
