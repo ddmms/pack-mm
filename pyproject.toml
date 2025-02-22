@@ -47,7 +47,7 @@ docs = [
     "furo<2025.0.0,>=2024.1.29",
     "jupyter>=1.1.1",
     "markupsafe<2.1",
-    "sphinx-immaterial",
+    "immaterial",
     "nbsphinx>=0.9.6",
     "numpydoc<2.0.0,>=1.6.0",
     "sphinx<9.0.0,>=8.0.2",
@@ -138,3 +138,5 @@ default-groups = [
     "docs",
     "pre-commit",
 ]
+[tool.uv.sources]
+immaterial = { git = "https://github.com/jbms/sphinx-immaterial.git", rev = "main" }
