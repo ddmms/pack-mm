@@ -129,7 +129,7 @@ def random_point_in_cylinder(
     return (x, y, z)
 
 def validate_value(label,x):
-    if x is not None  and x <= 0.0:
+    if x is not None  and x < 0.0:
         err = f"Invalid {label}, needs to be positive"
         print(err)
         raise  Exception(err)
@@ -189,6 +189,11 @@ def pack_molecules(
     validate_value("box a", a)
     validate_value("box b", b)
     validate_value("box c", c)
+    validate_value("ntries", ntries)
+    validate_value("cell box a", ca)
+    validate_value("cell box b", cb)
+    validate_value("nmols", nmols)
+    validate_value("cell box c", cc)
 
     random.seed(seed)
 
@@ -215,11 +220,9 @@ def pack_molecules(
     # Set parameters based on insertion region
     if where == "anywhere":
         a, b, c = 1, 1, 1
-        print(f"{a=} {b=} {c=}")
     elif where == "sphere":
         if radius is None:
             radius = min(cell) * 0.5
-        print(f"{radius=}")
     elif where in ["cylinderZ", "cylinderY", "cylinderX"]:
         if radius is None:
             if where == "cylinderZ":
@@ -230,24 +233,18 @@ def pack_molecules(
                 radius = min(cell[2], cell[1]) * 0.5
         if height is None:
             height = 0.5
-        print(f"{radius=} {height=}")
     elif where == "box":
         a, b, c = a or 1, b or 1, c or 1
-        print(f"{a=} {b=} {c=}")
     elif where == "ellipsoid":
         a, b, c = a or 0.5, b or 0.5, c or 0.5
-        print(f"{a=} {b=} {c=}")
 
-    # Initialize calculator
     calc = choose_calculator(
         arch=arch, model_path=model, device=device, default_dtype="float64"
     )
     sys.calc = calc
 
-    # Get initial energy
     e = sys.get_potential_energy() if len(sys) > 0 else 0.0
 
-    # Insert molecules
     csys = sys.copy()
     for i in range(nmols):
         accept = False
