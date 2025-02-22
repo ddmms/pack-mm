@@ -74,6 +74,33 @@ packmm --system Cu2L-ethanol.cif --molecule H2O --nmols 10  --where ellipsoid --
 
 !()[examples/pics/Cu2l-ethanol-water.png]
 
+### Liquid water
+
+```bash
+
+packmm --molecule H2O --nmols 33  --where anywhere  --cell-a 10.0 --cell-b 10.0 --cell-c 10.0  --model small-0b2
+
+
+```
+
+!()[examples/pics/water.png]
+### interstitials
+
+```bash
+
+packmm --system Pd-super.cif --molecule H2 --nmols 50  --where anywhere   --model small-0b2
+
+```
+
+before optimisation
+
+!()[examples/pics/Pd-H2-noopt.png]
+
+
+after optimisation
+
+!()[examples/pics/Pd-H2.png]
+
 
 
 ### full list of options
