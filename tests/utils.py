@@ -1,8 +1,10 @@
 """Utility functions for tests."""
+
 # lifted from janus_core github.com/stfc/janus-core/
 from __future__ import annotations
 
 import re
+
 
 def strip_ansi_codes(output: str) -> str:
     """
@@ -37,4 +39,3 @@ def strip_ansi_codes(output: str) -> str:
         re.VERBOSE,
     )
     return ansi_escape.sub("", output)
-
