@@ -19,7 +19,7 @@ classifiers = [
 readme = "README.md"
 
 dependencies = [
-    "janus-core>=0.7.2", 
+    "janus-core>=0.7.2",
     "typer<1.0.0,>=0.12.5",
     "typer-config<2.0.0,>=1.4.2",
 ]

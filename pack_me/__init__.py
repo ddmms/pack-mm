@@ -1,8 +1,6 @@
-"""Tools to download files from a link
+"""Pack molecules in various shapes."""
 
-typical usage
-
-"""
+from __future__ import annotations
 
 from importlib.metadata import version
 
