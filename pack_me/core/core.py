@@ -13,9 +13,6 @@ from pathlib import Path
 import argparse
 from ase import Atoms
 from typing import Optional, Tuple, List
-import typer
-
-packme = typer.Typer()
 
 def random_point_in_sphere(c: (float,float,float), r: float) -> (float,float,float):
     """
@@ -119,67 +116,6 @@ def random_point_in_cylinder(c: (float,float,float), r: float, h: float, d: str)
       z = c[2] + rad * cos(theta)
 
     return (x, y, z)
-
-
-@packme.command()
-def pack_system(
-    system: Optional[str] = typer.Option(None, help="The original box in which you want to add particles. If not provided, an empty box will be created."),
-    molecule: str = typer.Option("H2O", help="Name of the molecule to be processed, ASE-recognizable or ASE-readable file."),
-    nmols: int = typer.Option(10, help="Target number of molecules to insert."),
-    ntries: int = typer.Option(50, help="Maximum number of attempts to insert each molecule."),
-    seed: int = typer.Option(2025, help="Random seed for reproducibility."),
-    where: Literal["anywhere", "sphere", "box", "cylinderZ", "cylinderY", "cylinderX", "ellipsoid"] = typer.Option(
-        "anywhere",
-        help="How to insert the molecule. Choices: 'anywhere', 'sphere', 'box', 'cylinderZ', 'cylinderY', 'cylinderX', 'ellipsoid'.",
-        case_sensitive=False,
-    ),
-    center: Optional[str] = typer.Option(None, help="Center of the insertion zone in fractional coordinates, e.g., '0.12,0.4,0.5'."),
-    radius: Optional[float] = typer.Option(None, help="Radius of the sphere or cylinder in Å, depending on the insertion volume."),
-    height: Optional[float] = typer.Option(None, help="Height of the cylinder in fractional coordinates."),
-    a: Optional[float] = typer.Option(None, help="Side of the box or semi-axis of the ellipsoid, fractional, depends on the insertion method."),
-    b: Optional[float] = typer.Option(None, help="Side of the box or semi-axis of the ellipsoid, fractional, depends on the insertion method."),
-    c: Optional[float] = typer.Option(None, help="Side of the box or semi-axis of the ellipsoid, fractional, depends on the insertion method."),
-    device: str = typer.Option("cpu", help="Device to run calculations on (e.g., 'cpu' or 'cuda')."),
-    model: str = typer.Option("medium-omat-0", help="ML model to use."),
-    arch: str = typer.Option("mace_mp", help="MLIP architecture to use."),
-    temperature: float = typer.Option(300.0, help="Temperature for the Monte Carlo acceptance rule."),
-    ca: float = typer.Option(10.0, help="Side of the empty box along the x-axis."),
-    cb: float = typer.Option(10.0, help="Side of the empty box along the y-axis."),
-    cc: float = typer.Option(10.0, help="Side of the empty box along the z-axis."),
-    geometry: bool = typer.Option(True, help="Perform geometry optimization at the end."),
-):
-    """
-    Pack molecules into a system based on the specified parameters.
-    """
-    # Convert center string to tuple if provided
-    if center:
-        center = tuple(map(float, center.split(',')))
-
-    # Call the main packing function
-    pack_molecules(
-        system=system,
-        molecule=molecule,
-        nmols=nmols,
-        arch=arch,
-        model=model,
-        device=device,
-        where=where,
-        center=center,
-        radius=radius,
-        height=height,
-        a=a,
-        b=b,
-        c=c,
-        seed=seed,
-        T=temperature,
-        ntries=ntries,
-        geometry=geometry,
-        ca=ca,
-        cb=cb,
-        cc=cc,
-    )
-
-insertions = ['anywhere','sphere','box','cylinderZ','cylinderY','cylinderX','ellipsoid']
 
 
 def pack_molecules(
