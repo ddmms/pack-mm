@@ -44,7 +44,8 @@ jobs:
       - name: Close parallel build
         uses: coverallsapp/github-action@v2.3.6
         with:
-          parallel-finished: true
+        flag-name: run-${{ join(matrix.*, '-') }}
+          parallel: true
 
   pre-commit:
     runs-on: ubuntu-latest
