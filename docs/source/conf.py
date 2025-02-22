@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'pack-me'
+project = 'pack-mm'
 copyright = '2025, alin m elena'
 author = 'alin m elena'
 
