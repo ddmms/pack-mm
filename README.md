@@ -7,6 +7,11 @@
 
 ## Quick install
 
+```bash
+
+   uv pip install pack-mm
+
+```
 
 ## CLI examples
 
@@ -36,6 +41,109 @@
 ```
 
 ### MOF ellipsoid
+
+
+### full list of options
+
+```bash
+
+  packmm --help
+
+   Usage: packmm [OPTIONS]
+
+ Pack molecules into a system based on the specified parameters.
+
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────╮
+│ --system                                 TEXT                        The original box in which   │
+│                                                                      you want to add particles.  │
+│                                                                      If not provided, an empty   │
+│                                                                      box will be created.        │
+│                                                                      [default: None]             │
+│ --molecule                               TEXT                        Name of the molecule to be  │
+│                                                                      processed, ASE-recognizable │
+│                                                                      or ASE-readable file.       │
+│                                                                      [default: H2O]              │
+│ --nmols                                  INTEGER                     Target number of molecules  │
+│                                                                      to insert.                  │
+│                                                                      [default: -1]               │
+│ --ntries                                 INTEGER                     Maximum number of attempts  │
+│                                                                      to insert each molecule.    │
+│                                                                      [default: 50]               │
+│ --seed                                   INTEGER                     Random seed for             │
+│                                                                      reproducibility.            │
+│                                                                      [default: 2025]             │
+│ --where                                  [anywhere|sphere|box|cylin  Where to insert the         │
+│                                          derZ|cylinderY|cylinderX|e  molecule. Choices:          │
+│                                          llipsoid]                   'anywhere', 'sphere',       │
+│                                                                      'box', 'cylinderZ',         │
+│                                                                      'cylinderY', 'cylinderX',   │
+│                                                                      'ellipsoid'.                │
+│                                                                      [default: anywhere]         │
+│ --centre                                 TEXT                        Centre of the insertion     │
+│                                                                      zone, coordinates in Å,     │
+│                                                                      e.g., '5.0, 5.0, 5.0'.      │
+│                                                                      [default: None]             │
+│ --radius                                 FLOAT                       Radius of the sphere or     │
+│                                                                      cylinder in Å, depending on │
+│                                                                      the insertion volume.       │
+│                                                                      [default: None]             │
+│ --height                                 FLOAT                       Height of the cylinder in   │
+│                                                                      Å.                          │
+│                                                                      [default: None]             │
+│ --a                                      FLOAT                       Side of the box or          │
+│                                                                      semi-axis of the ellipsoid, │
+│                                                                      in Å, depends on the        │
+│                                                                      insertion method.           │
+│                                                                      [default: None]             │
+│ --b                                      FLOAT                       Side of the box or          │
+│                                                                      semi-axis of the ellipsoid, │
+│                                                                      in Å, depends on the        │
+│                                                                      insertion method.           │
+│                                                                      [default: None]             │
+│ --c                                      FLOAT                       Side of the box or          │
+│                                                                      semi-axis of the ellipsoid, │
+│                                                                      in Å, depends on the        │
+│                                                                      insertion method.           │
+│                                                                      [default: None]             │
+│ --device                                 TEXT                        Device to run calculations  │
+│                                                                      on (e.g., 'cpu' or 'cuda'). │
+│                                                                      [default: cpu]              │
+│ --model                                  TEXT                        ML model to use.            │
+│                                                                      [default: medium-omat-0]    │
+│ --arch                                   TEXT                        MLIP architecture to use.   │
+│                                                                      [default: mace_mp]          │
+│ --temperature                            FLOAT                       Temperature for the Monte   │
+│                                                                      Carlo acceptance rule.      │
+│                                                                      [default: 300.0]            │
+│ --cell-a                                 FLOAT                       Side of the empty box along │
+│                                                                      the x-axis in Å.            │
+│                                                                      [default: 20.0]             │
+│ --cell-b                                 FLOAT                       Side of the empty box along │
+│                                                                      the y-axis in Å.            │
+│                                                                      [default: 20.0]             │
+│ --cell-c                                 FLOAT                       Side of the empty box along │
+│                                                                      the z-axis in Å.            │
+│                                                                      [default: 20.0]             │
+│ --fmax                                   FLOAT                       force tollerance for        │
+│                                                                      optimisation if needed.     │
+│                                                                      [default: 0.1]              │
+│ --geometry              --no-geometry                                Perform geometry            │
+│                                                                      optimization at the end.    │
+│                                                                      [default: geometry]         │
+│ --out-path                               TEXT                        path to save various        │
+│                                                                      outputs.                    │
+│                                                                      [default: .]                │
+│ --install-completion                                                 Install completion for the  │
+│                                                                      current shell.              │
+│ --show-completion                                                    Show completion for the     │
+│                                                                      current shell, to copy it   │
+│                                                                      or customize the            │
+│                                                                      installation.               │
+│ --help                                                               Show this message and exit. │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+
+```
 
 
 [python-badge]: https://img.shields.io/pypi/pyversions/pack-mm.svg
