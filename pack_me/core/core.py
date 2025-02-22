@@ -128,11 +128,14 @@ def random_point_in_cylinder(
 
     return (x, y, z)
 
-def validate_value(label,x):
-    if x is not None  and x < 0.0:
+
+def validate_value(label, x):
+    """Validate input value, and raise an exception."""
+    if x is not None and x < 0.0:
         err = f"Invalid {label}, needs to be positive"
         print(err)
-        raise  Exception(err)
+        raise Exception(err)
+
 
 def pack_molecules(
     system: str | None,
