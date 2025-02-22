@@ -1,9 +1,18 @@
-# pack materials and molecules
-
 [![Python versions][python-badge]][python-link]
 [![Build Status][ci-badge]][ci-link]
 [![Coverage Status][cov-badge]][cov-link]
 [![License][license-badge]][license-link]
+
+# what is packmm
+
+packmm is a simple python package that allows to build atomistic and molecular
+systems which are of interest for materials and molecular modelling.
+
+It tries to generate realistic starting configuration by employing machine learnt
+interatomic potential for describing interactions between atoms and Monte Carlo,
+Molecular Dynamics and hybrid Monte Carlo.
+
+It provides both a cli and a python api, with some examples below.
 
 ## Quick install
 
