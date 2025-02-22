@@ -83,7 +83,7 @@ target-version = "py310"
 
 [tool.ruff.lint]
 # Ignore complexity
-ignore = ["C901"]
+ignore = ["C901","B008"]
 select = [
     # flake8-bugbear
     "B",
