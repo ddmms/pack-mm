@@ -1,6 +1,6 @@
 [project]
 name = "pack-mm"
-version = "0.0.21"
+version = "0.0.22"
 description = "packing materials and molecules in boxes using for machine learnt interatomic potentials"
 authors = [
     { name = "Alin M. Elena" },
