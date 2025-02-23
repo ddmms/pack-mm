@@ -11,6 +11,7 @@ from pathlib import Path
 from ase import Atoms
 from ase.build import molecule as build_molecule
 from ase.io import read, write
+from ase.units import kB
 from janus_core.calculations.geom_opt import GeomOpt
 from janus_core.helpers.mlip_calculators import choose_calculator
 from numpy import cos, exp, pi, random, sin, sqrt
@@ -185,7 +186,7 @@ def pack_molecules(
         cell_a, cell_b, cell_c (float): Cell dimensions if system is empty.
         out_path (str): path to save various outputs
     """
-    kbt = temperature * 8.6173303e-5  # Boltzmann constant in eV/K
+    kbt = temperature * kB
     validate_value("temperature", temperature)
     validate_value("radius", radius)
     validate_value("height", height)
