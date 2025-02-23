@@ -318,7 +318,6 @@ def test_save_the_day(tmp_path):
     molecule.center()
     structure_file = tmp_path / "water.cif"
     write(structure_file, molecule)
-    print(molecule.positions)
     s = save_the_day(
         str(structure_file),
         device="cpu",
@@ -327,7 +326,6 @@ def test_save_the_day(tmp_path):
         fmax=0.01,
         out_path=tmp_path,
     )
-    print(s.positions)
     assert s[0].position == pytest.approx([5.0, 4.99619815, 5.30704738], abs=err)
 
 
@@ -339,7 +337,6 @@ def test_save_the_day_md(tmp_path):
     molecule.center()
     structure_file = tmp_path / "water.cif"
     write(structure_file, molecule)
-    print(molecule.positions)
     s = save_the_day(
         str(structure_file),
         device="cpu",
@@ -350,8 +347,28 @@ def test_save_the_day_md(tmp_path):
         md_steps=10.0,
         md_temperature=100.0,
     )
-    print(s.positions)
     assert s[0].position == pytest.approx([4.99684244, 5.00440785, 5.2987255], abs=err)
+
+
+def test_save_the_day_invalid(tmp_path):
+    """Test save the day."""
+    molecule = build_molecule("H2O")
+    molecule.set_cell([10, 10, 10])
+    molecule.set_pbc([True, True, True])
+    molecule.center()
+    structure_file = tmp_path / "water.cif"
+    write(structure_file, molecule)
+    s = save_the_day(
+        str(structure_file),
+        device="cpu",
+        arch="mace_mp",
+        model="small-0b2",
+        relax_strategy="invalid_stratregy",
+        md_timestep=1.0,
+        md_steps=10.0,
+        md_temperature=100.0,
+    )
+    assert s is None
 
 
 def test_run_md(tmp_path):
