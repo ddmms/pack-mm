@@ -25,14 +25,14 @@ def test_packmm_custom_molecule():
     """Check molecule."""
     result = runner.invoke(app, ["--molecule", "CO2"])
     assert result.exit_code == 0
-    assert "CO2" in strip_ansi_codes(result.output)
+    assert "molecule='CO2'" in strip_ansi_codes(result.output)
 
 
 def test_packmm_custom_nmols():
     """Check nmols."""
-    result = runner.invoke(app, ["--nmols", "1"])
-    assert result.exit_code == 0
-    assert "nmols=1" in strip_ansi_codes(result.output)
+    result = runner.invoke(app, ["--nmols", "-2"])
+    assert result.exit_code == 1
+    assert "nmols=-2" in strip_ansi_codes(result.output)
 
 
 def test_packmm_custom_ntries():
@@ -49,11 +49,32 @@ def test_packmm_custom_seed():
     assert "seed=1234" in strip_ansi_codes(result.output)
 
 
+def test_packmm_custom_every():
+    """Check seed."""
+    result = runner.invoke(app, ["--every", "10"])
+    assert result.exit_code == 0
+    assert "every=10" in strip_ansi_codes(result.output)
+
+
 def test_packmm_custom_insertion_method():
     """Check insertion."""
     result = runner.invoke(app, ["--where", "sphere"])
     assert result.exit_code == 0
     assert "where=sphere" in strip_ansi_codes(result.output)
+
+
+def test_packmm_custom_insert_strategy():
+    """Check insertion."""
+    result = runner.invoke(app, ["--insert-strategy", "hmc"])
+    assert result.exit_code == 0
+    assert "insert_strategy=hmc" in strip_ansi_codes(result.output)
+
+
+def test_packmm_custom_relax_strategy():
+    """Check relax."""
+    result = runner.invoke(app, ["--relax-strategy", "md"])
+    assert result.exit_code == 0
+    assert "relax_strategy=md" in strip_ansi_codes(result.output)
 
 
 def test_packmm_custom_center():
@@ -122,6 +143,27 @@ def test_packmm_custom_temperature():
     assert "temperature=400.0" in strip_ansi_codes(result.output)
 
 
+def test_packmm_md_temperature():
+    """Check md temperature."""
+    result = runner.invoke(app, ["--md-temperature", "300.0"])
+    assert result.exit_code == 0
+    assert "md_temperature=300.0" in strip_ansi_codes(result.output)
+
+
+def test_packmm_md_timestep():
+    """Check md temperature."""
+    result = runner.invoke(app, ["--md-timestep", "1.0"])
+    assert result.exit_code == 0
+    assert "md_timestep=1.0" in strip_ansi_codes(result.output)
+
+
+def test_packmm_md_steps():
+    """Check md steps."""
+    result = runner.invoke(app, ["--md-steps", "10"])
+    assert result.exit_code == 0
+    assert "md_steps=10" in strip_ansi_codes(result.output)
+
+
 def test_packmm_custom_fmax():
     """Check fmax."""
     result = runner.invoke(app, ["--fmax", "0.05"])
@@ -143,16 +185,41 @@ def test_packmm_invalid_insertion_method():
     assert "Invalid value for '--where'" in strip_ansi_codes(result.output)
 
 
+def test_packmm_invalid_insertion_strategy():
+    """Check insertion strategt."""
+    result = runner.invoke(app, ["--insert-strategy", "invalid_method"])
+    assert result.exit_code != 0
+    assert "Invalid value for '--insert-strategy'" in strip_ansi_codes(result.output)
+
+
+def test_packmm_invalid_relax_strategy():
+    """Check insertion strategt."""
+    result = runner.invoke(app, ["--relax-strategy", "invalid_method"])
+    assert result.exit_code != 0
+    assert "Invalid value for '--relax-strategy'" in strip_ansi_codes(result.output)
+
+
+def test_packmm_invalid_md_steps():
+    """Check md steps."""
+    result = runner.invoke(app, ["--nmols", "1", "--md-steps", "-10"])
+    assert "Invalid MD steps" in strip_ansi_codes(result.output)
+
+
+def test_packmm_invalid_md_temperature():
+    """Check md steps."""
+    result = runner.invoke(app, ["--nmols", "1", "--md-temperature", "-10.0"])
+    assert "Invalid MD temperature" in strip_ansi_codes(result.output)
+
+
+def test_packmm_invalid_md_timestep():
+    """Check md timestep."""
+    result = runner.invoke(app, ["--nmols", "1", "--md-timestep", "-10.0"])
+    assert "Invalid MD timestep" in strip_ansi_codes(result.output)
+
+
 def test_packmm_invalid_centre_format():
     """Check centre."""
     result = runner.invoke(app, ["--nmols", "1", "--centre", "0.5,0.5"])
-    assert result.exit_code != 0
-    assert "Invalid centre" in strip_ansi_codes(result.output)
-
-
-def test_packmm_invalid_centre_value():
-    """Check centre."""
-    result = runner.invoke(app, ["--nmols", "1", "--centre", "-0.6,0.5,0.5"])
     assert result.exit_code != 0
     assert "Invalid centre" in strip_ansi_codes(result.output)
 

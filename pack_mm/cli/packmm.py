@@ -25,6 +25,22 @@ class InsertionMethod(str, Enum):
     ELLIPSOID = "ellipsoid"
 
 
+class InsertionStrategy(str, Enum):
+    """Insertion options."""
+
+    # propose randomly a point
+    MC = "mc"
+    # hybrid monte carlo
+    HMC = "hmc"
+
+
+class RelaxStrategy(str, Enum):
+    """Relaxation options."""
+
+    GEOMETRY_OPTIMISATION = "geometry_optimisation"
+    MD = "md"
+
+
 app = typer.Typer(no_args_is_help=True)
 
 
@@ -44,11 +60,25 @@ def packmm(
     ntries: int = typer.Option(
         50, help="Maximum number of attempts to insert each molecule."
     ),
+    every: int = typer.Option(
+        -1, help="Run MD-NVE or Geometry optimisation everyth insertion."
+    ),
     seed: int = typer.Option(2025, help="Random seed for reproducibility."),
+    md_steps: int = typer.Option(10, help="Number of steps to run MD."),
+    md_timestep: float = typer.Option(1.0, help="Timestep for MD integration, in fs."),
     where: InsertionMethod = typer.Option(
         InsertionMethod.ANYWHERE,
         help="""Where to insert the molecule. Choices: 'anywhere', 'sphere',
         'box', 'cylinderZ', 'cylinderY', 'cylinderX', 'ellipsoid'.""",
+    ),
+    insert_strategy: InsertionStrategy = typer.Option(
+        InsertionStrategy.MC,
+        help="""How to insert a new molecule. Choices: 'mc', 'hmc',""",
+    ),
+    relax_strategy: RelaxStrategy = typer.Option(
+        RelaxStrategy.GEOMETRY_OPTIMISATION,
+        help="""How to relax the system to get more favourable structures.
+            Choices: 'geometry_optimisation', 'md',""",
     ),
     centre: str | None = typer.Option(
         None,
@@ -83,6 +113,9 @@ def packmm(
     arch: str = typer.Option("mace_mp", help="MLIP architecture to use."),
     temperature: float = typer.Option(
         300.0, help="Temperature for the Monte Carlo acceptance rule."
+    ),
+    md_temperature: float = typer.Option(
+        100.0, help="Temperature for the Molecular dynamics relaxation."
     ),
     cell_a: float = typer.Option(
         20.0, help="Side of the empty box along the x-axis in Å."
@@ -125,6 +158,12 @@ def packmm(
     print(f"{fmax=}")
     print(f"{geometry=}")
     print(f"{out_path=}")
+    print(f"{every=}")
+    print(f"insert_strategy={insert_strategy.value}")
+    print(f"relax_strategy={relax_strategy.value}")
+    print(f"{md_steps=}")
+    print(f"{md_timestep=}")
+    print(f"{md_temperature=}")
     if nmols == -1:
         print("nothing to do, no molecule to insert")
         raise typer.Exit(0)
@@ -161,8 +200,10 @@ def packmm(
         cell_b=cell_b,
         cell_c=cell_c,
         out_path=out_path,
+        every=every,
+        relax_strategy=relax_strategy,
+        insert_strategy=insert_strategy,
+        md_steps=md_steps,
+        md_timestep=md_timestep,
+        md_temperature=md_temperature,
     )
-
-
-if __name__ == "__main__":
-    app()

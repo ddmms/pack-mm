@@ -1,0 +1,50 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: tests_cli
+
+on:
+  push:
+    tags:
+      # After vMajor.Minor.Patch _anything_ is allowed (without "/") !
+      - v[0-9]+.[0-9]+.[0-9]+*
+
+jobs:
+  tests_cli:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11","3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        version: "0.6.1"
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: uv sync
+    - name: install
+      run: |
+        uv pip install .
+    - name: sphere
+      run: uv run packmm --system examples/data/UiO-66.cif --molecule H2O --nmols 10  --where sphere --centre 10.0,10.0,10.0 --radius 5.0 --geometry --model small-0b2
+    - name: cylinder
+      run: uv run packmm --system examples/data/MFI.cif --molecule H2O --nmols 30  --where cylinderY --centre 10.0,10.0,13.0 --radius 3.5 --height 19.00  --no-geometry --model small-0b2
+    - name: surface
+      run: uv run packmm --system examples/data/NaCl.cif --molecule H2O --nmols 30  --where box --centre 8.5,8.5,16.0 --a 16.9 --b 16.9 --c 7.5 --no-geometry --model small-0b2
+    - name: ellipsoid
+      run: |
+        uv run packmm --system examples/data/Cu2L.cif --molecule examples/data/Ethanol.xyz --nmols 1  --where sphere --centre 5.18,8.15,25.25 --radius 1 --model small-0b2
+        uv run packmm --system Cu2L+1Ethanol-opt.cif --molecule H2O --nmols 10  --where ellipsoid --centre 5.18,8.15,25.25 --a 5.18 --b 8.15 --c 8.25 --no-geometry --model small-0b2
+    - name: liquid
+      run: uv run packmm --molecule H2O --nmols 33  --where anywhere  --cell-a 10.0 --cell-b 10.0 --cell-c 10.0  --model small-0b2
+    - name: interstitials
+      run: uv run packmm --system examples/data/Pd-super.cif --molecule H2 --nmols 50  --where anywhere   --model small-0b2
