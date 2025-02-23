@@ -40,7 +40,7 @@ or install the lates
 
 ```
 
-![](examples/pics/UiO66water.png)
+![](examples/pics/UiO66water.webp)
 
 ### Zeolite in cylindrical channel
 
@@ -51,7 +51,7 @@ or install the lates
 
 ```
 
-![](examples/pics/MFIwater.png)
+![](examples/pics/MFIwater.webp)
 
 ### NaCl on surface
 
@@ -60,7 +60,7 @@ or install the lates
 
 ```
 
-![](examples/pics/NaClwater.png)
+![](examples/pics/NaClwater.webp)
 
 ### MOF ellipsoid
 
@@ -72,7 +72,7 @@ packmm --system examples/data/Cu2L.cif --molecule examples/data/Ethanol.xyz --nm
 
 ```
 
-!()[examples/pics/Cu2L-ethanol.png]
+!()[examples/pics/Cu2L-ethanol.webp]
 
 ``` bash
 
@@ -81,7 +81,7 @@ packmm --system Cu2L-ethanol.cif --molecule H2O --nmols 10  --where ellipsoid --
 
 ```
 
-!()[examples/pics/Cu2l-ethanol-water.png]
+!()[examples/pics/Cu2l-ethanol-water.webp]
 
 ### Liquid water
 
@@ -92,7 +92,7 @@ packmm --molecule H2O --nmols 33  --where anywhere  --cell-a 10.0 --cell-b 10.0 
 
 ```
 
-!()[examples/pics/water.png]
+!()[examples/pics/water.webp]
 ### interstitials
 
 ```bash
@@ -103,12 +103,12 @@ packmm --system Pd-super.cif --molecule H2 --nmols 50  --where anywhere   --mode
 
 before optimisation
 
-!()[examples/pics/Pd-H2-noopt.png]
+!()[examples/pics/Pd-H2-noopt.webp]
 
 
 after optimisation
 
-!()[examples/pics/Pd-H2.png]
+!()[examples/pics/Pd-H2.webp]
 
 
 
