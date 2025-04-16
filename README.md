@@ -44,11 +44,11 @@ API.
 ## Jupyter notebook examples
 
 
-- [Basics](docs/source/tutorials/basics.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/basic.ipynb)
-- [Surface](docs/source/tutorials/basics.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/surface.ipynb)
-- [Water](docs/source/tutorials/basics.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/water.ipynb)
-- [interstitials](docs/source/tutorials/basics.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/interstitials.ipynb)
-- [Mof](docs/source/tutorials/basics.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/mof.ipynb)
+- [Basics](docs/source/tutorials/basic.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/basic.ipynb)
+- [Surface](docs/source/tutorials/surface.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/surface.ipynb)
+- [Water](docs/source/tutorials/water.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/water.ipynb)
+- [interstitials](docs/source/tutorials/interstitials.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/interstitials.ipynb)
+- [Mof](docs/source/tutorials/mof.ipynb) [![badge](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ddmms/pack-mm/blob/main/docs/source/tutorials/mof.ipynb)
 
 ## CLI examples
 
