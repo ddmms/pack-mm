@@ -194,6 +194,13 @@ def test_packmm_custom_threshold():
     assert "threshold=0.9" in strip_ansi_codes(result.output)
 
 
+def test_packmm_with_dispersion():
+    """Check dispersion."""
+    result = runner.invoke(app, ["--dispersion"])
+    assert result.exit_code == 0
+    assert "dispersion=True" in strip_ansi_codes(result.output)
+
+
 def test_packmm_no_geometry_optimization():
     """Check optimisation."""
     result = runner.invoke(app, ["--no-geometry"])

@@ -248,6 +248,26 @@ def test_optimize_geometry(tmp_path):
     assert optimized_energy == pytest.approx(-14.17098106193308, abs=err)
 
 
+def test_optimize_geometry_dispersion(tmp_path):
+    """Test go with dispersion."""
+    molecule = build_molecule("H2O")
+    molecule.set_cell([10, 10, 10])
+    molecule.set_pbc([True, True, True])
+    structure_file = tmp_path / "water.cif"
+    write(structure_file, molecule)
+    optimized_energy, _ = optimize_geometry(
+        str(structure_file),
+        device="cpu",
+        arch="mace_mp",
+        model="small-0b2",
+        fmax=0.01,
+        out_path=tmp_path,
+        opt_cell=True,
+        dispersion=True,
+    )
+    assert optimized_energy == pytest.approx(-14.180876622530265, abs=err)
+
+
 def test_pack_molecules(tmp_path):
     """Test pack molecule."""
     system = Atoms(
@@ -337,6 +357,34 @@ def test_pack_molecules_2(tmp_path, capsys):
     assert e == pytest.approx(-47.194755808249454, abs=err)
 
 
+def test_pack_molecules_atoms_dispersion(tmp_path):
+    """Test pack molecule with dispersion."""
+    system = Atoms(
+        "Ca", positions=[(2.5, 2.5, 2.5)], cell=[5, 5, 5], pbc=[True, True, True]
+    )
+
+    e, _ = pack_molecules(
+        system=system,
+        molecule="H2O",
+        nmols=3,
+        arch="mace_mp",
+        model="small-0b2",
+        dispersion=True,
+        device="cpu",
+        where="sphere",
+        center=(2.5, 2.5, 2.5),
+        radius=2.5,
+        seed=2042,
+        temperature=300,
+        ntries=10,
+        geometry=False,
+        fmax=0.1,
+        out_path=tmp_path,
+    )
+    # Without dispersion: -42.386622937612316
+    assert e == pytest.approx(-42.93461715053182, abs=err)
+
+
 def test_save_the_day(tmp_path):
     """Test save the day."""
     molecule = build_molecule("H2O")
@@ -377,6 +425,26 @@ def test_save_the_day_md(tmp_path):
     assert s[0].position == pytest.approx([4.99684244, 5.00440785, 5.2987255], abs=err)
 
 
+def test_save_the_day_dispersion(tmp_path):
+    """Test save the day with dispersion."""
+    molecule = build_molecule("H2O")
+    molecule.set_cell([10, 10, 10])
+    molecule.set_pbc([True, True, True])
+    molecule.center()
+    structure_file = tmp_path / "water.cif"
+    write(structure_file, molecule)
+    s = save_the_day(
+        str(structure_file),
+        device="cpu",
+        arch="mace_mp",
+        model="small-0b2",
+        dispersion=True,
+        fmax=0.01,
+        out_path=tmp_path,
+    )
+    assert s[0].position == pytest.approx([4.99998938, 4.99618389, 5.30704305], abs=err)
+
+
 def test_save_the_day_invalid(tmp_path):
     """Test save the day."""
     molecule = build_molecule("H2O")
@@ -414,3 +482,22 @@ def test_run_md(tmp_path):
         temp=100.0,
     )
     assert s[0].position == pytest.approx([4.99684244, 5.00440785, 5.2987255], abs=err)
+
+
+def test_run_md_dispersion(tmp_path):
+    """Test md with dispersion."""
+    molecule = build_molecule("H2O")
+    molecule.set_cell([10, 10, 10])
+    molecule.set_pbc([True, True, True])
+    molecule.center()
+    s = run_md_nve(
+        molecule,
+        device="cpu",
+        arch="mace_mp",
+        model="small-0b2",
+        dispersion=True,
+        timestep=1.0,
+        steps=10.0,
+        temp=100.0,
+    )
+    assert s[0].position == pytest.approx([4.99684244, 5.00440795, 5.29872694], abs=err)

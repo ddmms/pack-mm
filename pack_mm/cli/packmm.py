@@ -113,6 +113,7 @@ def packmm(
         "cpu", help="Device to run calculations on (e.g., 'cpu' or 'cuda')."
     ),
     model: str = Option("medium-omat-0", help="ML model to use."),
+    dispersion: bool = Option(False, help="Include a dispersion correction."),
     arch: str = Option("mace_mp", help="MLIP architecture to use."),
     temperature: float = Option(
         300.0, help="Temperature for the Monte Carlo acceptance rule."
@@ -152,6 +153,7 @@ def packmm(
     print(f"{cell_c=}")
     print(f"{arch=}")
     print(f"{model=}")
+    print(f"{dispersion=}")
     print(f"{device=}")
     print(f"{temperature=}")
     print(f"{fmax=}")

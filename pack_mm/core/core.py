@@ -191,6 +191,7 @@ def pack_molecules(
     nmols: int = -1,
     arch: str = "mace_mp",
     model: str = "medium-omat-0",
+    dispersion: bool = False,
     device: str = "cpu",
     where: str = "anywhere",
     center: tuple[float, float, float] = None,
@@ -226,6 +227,7 @@ def pack_molecules(
         nmols (int): Number of molecules to insert.
         arch (str): Architecture for the calculator.
         model (str): Path to the model file.
+        dispersion (bool): If a dispersion correction is added to MLIP calculator.
         device (str): Device to run calculations on (e.g., "cpu" or "cuda").
         where (str): Region to insert molecules ("anywhere",
                      "sphere", "cylinderZ", etc.).
@@ -297,7 +299,7 @@ def pack_molecules(
         cell, center, where, a, b, c, radius, height
     )
 
-    calc = choose_calculator(arch=arch, model_path=model, device=device)
+    calc = choose_calculator(arch=arch, model_path=model, device=device, dispersion=dispersion)
     sys.calc = calc
 
     e = sys.get_potential_energy() if len(sys) > 0 else 0.0
@@ -319,7 +321,7 @@ def pack_molecules(
             tsys = csys.copy() + mol.copy()
             if insert_strategy == "hmc":
                 tsys = run_md_nve(
-                    tsys, md_temperature, md_steps, md_timestep, arch, model, device
+                    tsys, md_temperature, md_steps, md_timestep, arch, model, dispersion, device
                 )
 
             if every > 0 and _itry / every == 0:
@@ -328,6 +330,7 @@ def pack_molecules(
                     device=device,
                     arch=arch,
                     model=model,
+                    dispersion=dispersion,
                     fmax=fmax,
                     out_path=out_path,
                     md_temperature=md_temperature,
@@ -362,6 +365,7 @@ def pack_molecules(
                 device,
                 arch,
                 model,
+                dispersion,
                 fmax,
                 out_path,
                 md_temperature,
@@ -382,6 +386,7 @@ def pack_molecules(
             fmax=fmax,
             out_path=out_path,
             opt_cell=True,
+            dispersion=dispersion,
         )
     return (energy_final, csys)
 
@@ -430,6 +435,7 @@ def save_the_day(
     device: str = "",
     arch: str = "",
     model: str = "",
+    dispersion: bool = False,
     fmax: float = 0.01,
     out_path: str = ".",
     md_temperature: float = 100.0,
@@ -446,11 +452,12 @@ def save_the_day(
             model,
             fmax,
             out_path,
+            dispersion = dispersion,
         )
         return a
     if relax_strategy == "md":
         return run_md_nve(
-            struct, md_temperature, md_steps, md_timestep, arch, model, device
+            struct, md_temperature, md_steps, md_timestep, arch, model, dispersion, device
         )
     return None
 
@@ -462,6 +469,7 @@ def run_md_nve(
     timestep: float = 1.0,
     arch: str = "",
     model: str = "",
+    dispersion: bool = False,
     device: str = "",
 ) -> Atoms:
     """Run nve simulation."""
@@ -470,7 +478,7 @@ def run_md_nve(
         temp=temp,
         device=device,
         arch=arch,
-        calc_kwargs={"model_paths": model},
+        calc_kwargs={"model_paths": model, "dispersion": dispersion},
         stats_every=1,
         steps=steps,
         timestep=timestep,
@@ -487,6 +495,7 @@ def optimize_geometry(
     fmax: float,
     out_path: str = ".",
     opt_cell: bool = False,
+    dispersion: bool = False,
 ) -> tuple(float, Atoms):
     """Optimize the geometry of a structure."""
     geo = GeomOpt(
@@ -494,7 +503,7 @@ def optimize_geometry(
         device=device,
         arch=arch,
         fmax=fmax,
-        calc_kwargs={"model_paths": model},
+        calc_kwargs={"model_paths": model, "dispersion": dispersion},
         filter_kwargs={"hydrostatic_strain": opt_cell},
     )
     geo.run()

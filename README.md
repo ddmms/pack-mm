@@ -200,6 +200,9 @@ after optimisation
 │                                                                      [default: cpu]              │
 │ --model                                  TEXT                        ML model to use.            │
 │                                                                      [default: medium-omat-0]    │
+│ --dispersion            --no-dispersion                              Include a dispersion        │
+│                                                                      correction.                 │
+│                                                                      [default: no-dispersion]    │
 │ --arch                                   TEXT                        MLIP architecture to use.   │
 │                                                                      [default: mace_mp]          │
 │ --temperature                            FLOAT                       Temperature for the Monte   │
