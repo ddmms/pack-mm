@@ -321,7 +321,14 @@ def pack_molecules(
             tsys = csys.copy() + mol.copy()
             if insert_strategy == "hmc":
                 tsys = run_md_nve(
-                    tsys, md_temperature, md_steps, md_timestep, arch, model, dispersion, device
+                    tsys,
+                    md_temperature,
+                    md_steps,
+                    md_timestep,
+                    arch,
+                    model,
+                    dispersion,
+                    device,
                 )
 
             if every > 0 and _itry / every == 0:
@@ -452,12 +459,19 @@ def save_the_day(
             model,
             fmax,
             out_path,
-            dispersion = dispersion,
+            dispersion=dispersion,
         )
         return a
     if relax_strategy == "md":
         return run_md_nve(
-            struct, md_temperature, md_steps, md_timestep, arch, model, dispersion, device
+            struct,
+            md_temperature,
+            md_steps,
+            md_timestep,
+            arch,
+            model,
+            dispersion,
+            device,
         )
     return None
 
