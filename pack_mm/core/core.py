@@ -300,11 +300,11 @@ def pack_molecules(
     )
 
     calc = choose_calculator(
-            arch=arch,
-            model_path=model,
-            device=device,
-            dispersion=dispersion,
-            )
+        arch=arch,
+        model_path=model,
+        device=device,
+        dispersion=dispersion,
+    )
     sys.calc = calc
 
     e = sys.get_potential_energy() if len(sys) > 0 else 0.0
