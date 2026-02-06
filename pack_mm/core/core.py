@@ -301,7 +301,7 @@ def pack_molecules(
 
     calc = choose_calculator(
         arch=arch,
-        model_path=model,
+        model=model,
         device=device,
         dispersion=dispersion,
     )
