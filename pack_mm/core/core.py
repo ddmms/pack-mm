@@ -5,7 +5,7 @@
 """pack molecules inside various shapes."""
 
 from __future__ import annotations
-
+from copy import copy
 import logging
 from pathlib import Path
 
@@ -337,12 +337,12 @@ def pack_molecules(
         device=device,
         dispersion=dispersion,
     )
-    sys.calc = calc
+    sys.calc = copy(calc)
 
     e = sys.get_potential_energy() if len(sys) > 0 else 0.0
 
     mol = load_molecule(molecule)
-    mol.calc = calc
+    mol.calc = copy(calc)
     emol = mol.get_potential_energy()
 
     csys = sys.copy()
@@ -383,7 +383,7 @@ def pack_molecules(
                     relax_strategy=relax_strategy,
                 )
 
-            tsys.calc = calc
+            tsys.calc = copy(calc)
             en = tsys.get_potential_energy()
             de = en - e
 
