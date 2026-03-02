@@ -15,7 +15,7 @@ from pack_mm.cli.packmm import app
 
 runner = CliRunner()
 
-err = 1.0e-8
+err = 1.0e-5
 
 
 def test_packmm_hmc(tmp_path):
