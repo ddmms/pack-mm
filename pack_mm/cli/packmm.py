@@ -12,7 +12,7 @@ from janus_core.cli.utils import yaml_converter_callback
 from typer import Exit, Option, Typer
 from typer_config import use_config
 
-from pack_mm.core.core import pack_molecules
+from pack_mm.core.core import pack_molecules, setup_file_logger
 
 
 class InsertionMethod(str, Enum):
@@ -133,41 +133,45 @@ def packmm(
     ),
     geometry: bool = Option(True, help="Perform geometry optimization at the end."),
     out_path: str = Option(".", help="path to save various outputs."),
+    log: str = Option("pack-mm.log", help="file to save logs."),
 ):
     """Pack molecules into a system based on the specified parameters."""
-    print("Script called with following input")
-    print(f"{system=}")
-    print(f"{nmols=}")
-    print(f"{molecule=}")
-    print(f"{ntries=}")
-    print(f"{seed=}")
-    print(f"where={where.value}")
-    print(f"{centre=}")
-    print(f"{radius=}")
-    print(f"{height=}")
-    print(f"{a=}")
-    print(f"{b=}")
-    print(f"{c=}")
-    print(f"{cell_a=}")
-    print(f"{cell_b=}")
-    print(f"{cell_c=}")
-    print(f"{arch=}")
-    print(f"{model=}")
-    print(f"{dispersion=}")
-    print(f"{device=}")
-    print(f"{temperature=}")
-    print(f"{fmax=}")
-    print(f"{threshold=}")
-    print(f"{geometry=}")
-    print(f"{out_path=}")
-    print(f"{every=}")
-    print(f"insert_strategy={insert_strategy.value}")
-    print(f"relax_strategy={relax_strategy.value}")
-    print(f"{md_steps=}")
-    print(f"{md_timestep=}")
-    print(f"{md_temperature=}")
+    logger = setup_file_logger(log_file=log)
+    logger.info("Script called with following input")
+    logger.info(f"{system=}")
+    logger.info(f"{nmols=}")
+    logger.info(f"{molecule=}")
+    logger.info(f"{ntries=}")
+    logger.info(f"{seed=}")
+    logger.info(f"where={where.value}")
+    logger.info(f"{centre=}")
+    logger.info(f"{radius=}")
+    logger.info(f"{height=}")
+    logger.info(f"{a=}")
+    logger.info(f"{b=}")
+    logger.info(f"{c=}")
+    logger.info(f"{cell_a=}")
+    logger.info(f"{cell_b=}")
+    logger.info(f"{cell_c=}")
+    logger.info(f"{arch=}")
+    logger.info(f"{model=}")
+    logger.info(f"{dispersion=}")
+    logger.info(f"{device=}")
+    logger.info(f"{temperature=}")
+    logger.info(f"{fmax=}")
+    logger.info(f"{threshold=}")
+    logger.info(f"{geometry=}")
+    logger.info(f"{out_path=}")
+    logger.info(f"{every=}")
+    logger.info(f"insert_strategy={insert_strategy.value}")
+    logger.info(f"relax_strategy={relax_strategy.value}")
+    logger.info(f"{md_steps=}")
+    logger.info(f"{md_timestep=}")
+    logger.info(f"{md_temperature=}")
+    logger.info(f"log_file={log}")
+    print(f"Output is logger to {log}")
     if nmols == -1:
-        print("nothing to do, no molecule to insert")
+        logger.info("nothing to do, no molecule to insert")
         raise Exit(0)
 
     center = centre
@@ -176,7 +180,7 @@ def packmm(
         lc = [x < 0.0 for x in center]
         if len(center) != 3 or any(lc):
             err = "Invalid centre 3 coordinates expected!"
-            print(f"{err}")
+            logger.info(f"{err}")
             raise Exception("Invalid centre 3 coordinates expected!")
 
     pack_molecules(
@@ -209,4 +213,5 @@ def packmm(
         md_steps=md_steps,
         md_timestep=md_timestep,
         md_temperature=md_temperature,
+        logger=logger,
     )

@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from copy import copy
+import logging
 from pathlib import Path
 
 from ase import Atoms
@@ -16,6 +18,29 @@ from janus_core.calculations.geom_opt import GeomOpt
 from janus_core.calculations.md import NVE
 from janus_core.helpers.mlip_calculators import choose_calculator
 from numpy import cos, exp, pi, random, sin, sqrt
+
+
+def setup_file_logger(log_file="pack-mm.log", log_level=logging.INFO):
+    """
+    Set up a basic file logger.
+
+    Args:
+        log_file (str): The name of the file to write logs to.
+        log_level (int): The minimum level of messages to log
+        (e.g., logging.DEBUG, logging.INFO).
+    """
+    logger = logging.getLogger(__name__)
+    logger.setLevel(log_level)
+
+    file_handler = logging.FileHandler(log_file)
+
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    return logger
 
 
 def random_point_in_sphere(c: (float, float, float), r: float) -> (float, float, float):
@@ -131,11 +156,14 @@ def random_point_in_cylinder(
     return (x, y, z)
 
 
-def validate_value(label: str, x: float | int) -> None:
+def validate_value(label: str, x: float | int, logger: logging.logger = None) -> None:
     """Validate input value, and raise an exception."""
     if x is not None and x < 0.0:
         err = f"Invalid {label}, needs to be positive"
-        print(err)
+        if logger:
+            logger.info(err)
+        else:
+            print(err)
         raise Exception(err)
 
 
@@ -216,6 +244,7 @@ def pack_molecules(
     md_steps: int = 10,
     md_timestep: float = 1.0,
     md_temperature: float = 100.0,
+    logger: logging.logger = None,
 ) -> tuple(float, Atoms):
     """
     Pack molecules into a system based on the specified parameters.
@@ -259,22 +288,22 @@ def pack_molecules(
 
     """
     kbt = temperature * kB
-    validate_value("temperature", temperature)
-    validate_value("radius", radius)
-    validate_value("height", height)
-    validate_value("fmax", fmax)
-    validate_value("seed", seed)
-    validate_value("box a", a)
-    validate_value("box b", b)
-    validate_value("box c", c)
-    validate_value("ntries", ntries)
-    validate_value("cell box cell a", cell_a)
-    validate_value("cell box cell b", cell_b)
-    validate_value("cell box cell c", cell_c)
-    validate_value("nmols", nmols)
-    validate_value("MD steps", md_steps)
-    validate_value("MD timestep", md_timestep)
-    validate_value("MD temperature", md_temperature)
+    validate_value("temperature", temperature, logger)
+    validate_value("radius", radius, logger)
+    validate_value("height", height, logger)
+    validate_value("fmax", fmax, logger)
+    validate_value("seed", seed, logger)
+    validate_value("box a", a, logger)
+    validate_value("box b", b, logger)
+    validate_value("box c", c, logger)
+    validate_value("ntries", ntries, logger)
+    validate_value("cell box cell a", cell_a, logger)
+    validate_value("cell box cell b", cell_b, logger)
+    validate_value("cell box cell c", cell_c, logger)
+    validate_value("nmols", nmols, logger)
+    validate_value("MD steps", md_steps, logger)
+    validate_value("MD timestep", md_timestep, logger)
+    validate_value("MD temperature", md_temperature, logger)
 
     set_random_seed(seed)
 
@@ -289,9 +318,13 @@ def pack_molecules(
         sysname = Path(system).stem + "+"
 
     # Print summary
-    print(f"Inserting {nmols} {molecule} molecules in {sysname}.")
-    print(f"Using {arch} model {model} on {device}.")
-    print(f"Insert in {where}.")
+    summary = f"""Inserting {nmols} {molecule} molecules in {sysname}.
+    Using {arch} model {model} on {device}.
+    Insert in {where}."""
+    if logger:
+        logger.info(summary)
+    else:
+        print(summary)
 
     cell = sys.cell.lengths()
 
@@ -305,12 +338,12 @@ def pack_molecules(
         device=device,
         dispersion=dispersion,
     )
-    sys.calc = calc
+    sys.calc = copy(calc)
 
     e = sys.get_potential_energy() if len(sys) > 0 else 0.0
 
     mol = load_molecule(molecule)
-    mol.calc = calc
+    mol.calc = copy(calc)
     emol = mol.get_potential_energy()
 
     csys = sys.copy()
@@ -351,13 +384,17 @@ def pack_molecules(
                     relax_strategy=relax_strategy,
                 )
 
-            tsys.calc = calc
+            tsys.calc = copy(calc)
             en = tsys.get_potential_energy()
             de = en - e
 
             acc = exp(-de / kbt)
             u = random.random()
-            print(f"Old energy={e}, new energy={en}, {de=}, {acc=}, random={u}")
+            message_ene = f"Old energy={e}, new energy={en}, {de=}, {acc=}, random={u}"
+            if logger:
+                logger.info(message_ene)
+            else:
+                print(message_ene)
 
             if abs(de / emol) > threshold and u <= acc:
                 accept = True
@@ -366,12 +403,22 @@ def pack_molecules(
             csys = tsys.copy()
             e = en
             i += 1
-            print(f"Inserted particle {i}")
+            message_insert = f"Inserted particle {i}"
+            if logger:
+                logger.info(message_insert)
+            else:
+                print(message_insert)
             write(Path(out_path) / f"{sysname}{i}{Path(molecule).stem}.cif", csys)
         else:
             # Things are bad, maybe geomatry optimisation saves us
             # once you hit here is bad, this can keep looping
-            print(f"Failed to insert particle {i + 1} after {ntries} tries")
+            message_fail = f"""Failed to insert particle {i + 1} after {ntries} tries.
+            Trying alternative methods, {relax_strategy}, to save the day.
+            """
+            if logger:
+                logger.info(message_fail)
+            else:
+                print(message_fail)
             csys = save_the_day(
                 csys,
                 device,

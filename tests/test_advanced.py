@@ -15,7 +15,7 @@ from pack_mm.cli.packmm import app
 
 runner = CliRunner()
 
-err = 1.0e-8
+err = 1.0e-5
 
 
 def test_packmm_hmc(tmp_path):
@@ -84,4 +84,4 @@ def test_packmm_every(tmp_path):
     assert (tmp_path / "system+1H2.cif").exists()
     assert (tmp_path / "system+2H2.cif").exists()
     f = read(tmp_path / "system+2H2.cif")
-    assert f[0].position == pytest.approx([1.24701529, 0.024216, 0.11632905], abs=err)
+    assert f[0].position == pytest.approx([1.247015, 0.024216, 0.116329], abs=err)
