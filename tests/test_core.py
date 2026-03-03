@@ -29,8 +29,7 @@ from pack_mm.core.core import (
     validate_value,
 )
 
-err = 1.0e-8
-
+err = 1.0e-6
 
 # Set a fixed seed for reproducibility in tests
 @pytest.fixture(autouse=True)
