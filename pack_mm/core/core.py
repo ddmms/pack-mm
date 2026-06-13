@@ -220,6 +220,7 @@ def pack_molecules(
     arch: str = "mace_mp",
     model: str = "medium-omat-0",
     dispersion: bool = False,
+    head: str = None,
     device: str = "cpu",
     where: str = "anywhere",
     center: tuple[float, float, float] = None,
@@ -331,13 +332,21 @@ def pack_molecules(
     center, a, b, c, radius, height = set_defaults(
         cell, center, where, a, b, c, radius, height
     )
-
-    calc = choose_calculator(
-        arch=arch,
-        model=model,
-        device=device,
-        dispersion=dispersion,
-    )
+    if head:
+        calc = choose_calculator(
+            arch=arch,
+            model=model,
+            device=device,
+            dispersion=dispersion,
+            head=head
+        )
+    else:
+        calc = choose_calculator(
+            arch=arch,
+            model=model,
+            device=device,
+            dispersion=dispersion,
+        )
     sys.calc = copy(calc)
 
     e = sys.get_potential_energy() if len(sys) > 0 else 0.0
