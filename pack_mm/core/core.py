@@ -334,11 +334,7 @@ def pack_molecules(
     )
     if head:
         calc = choose_calculator(
-            arch=arch,
-            model=model,
-            device=device,
-            dispersion=dispersion,
-            head=head
+            arch=arch, model=model, device=device, dispersion=dispersion, head=head
         )
     else:
         calc = choose_calculator(
