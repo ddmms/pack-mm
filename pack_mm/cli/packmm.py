@@ -115,6 +115,7 @@ def packmm(
     model: str = Option("medium-omat-0", help="ML model to use."),
     dispersion: bool = Option(False, help="Include a dispersion correction."),
     arch: str = Option("mace_mp", help="MLIP architecture to use."),
+    head: str = Option(None, help="Head to use for the MLIP model."),
     temperature: float = Option(
         300.0, help="Temperature for the Monte Carlo acceptance rule."
     ),
@@ -155,6 +156,7 @@ def packmm(
     logger.info(f"{cell_c=}")
     logger.info(f"{arch=}")
     logger.info(f"{model=}")
+    logger.info(f"{head=}")
     logger.info(f"{dispersion=}")
     logger.info(f"{device=}")
     logger.info(f"{temperature=}")
@@ -189,6 +191,7 @@ def packmm(
         nmols=nmols,
         arch=arch,
         model=model,
+        head=head,
         device=device,
         where=where,
         center=center,
