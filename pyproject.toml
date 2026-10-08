@@ -5,12 +5,13 @@ description = "packing materials and molecules in boxes using for machine learnt
 authors = [
     { name = "Alin M. Elena" },
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
@@ -19,7 +20,7 @@ classifiers = [
 readme = "README.md"
 
 dependencies = [
-    "janus-core[mace]>=0.7.2",
+    "janus-core[mace]>=0.9.8",
     "typer<1.0.0,>=0.12.5",
     "typer-config<2.0.0,>=1.4.2",
 ]
