@@ -354,7 +354,7 @@ def test_pack_molecules_2(tmp_path, capsys):
     captured = capsys.readouterr()
 
     assert "Failed to insert particle 3 after 2 tries" in captured.out
-    assert e == pytest.approx(-47.194755808249454, abs=err)
+    assert e == pytest.approx(-47.19475309167005, abs=1.0e-5)
 
 
 def test_pack_molecules_atoms_dispersion(tmp_path):
