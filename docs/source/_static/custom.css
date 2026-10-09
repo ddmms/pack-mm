@@ -1,0 +1,7 @@
+/* Custom styling for pack-mm documentation */
+
+/* Dark mode logo replacement in sphinx-immaterial */
+[data-md-color-scheme="slate"] .md-header__button.md-logo img,
+[data-md-color-scheme="slate"] .md-logo img {
+  content: url("pack-mm-dark-notext.svg");
+}

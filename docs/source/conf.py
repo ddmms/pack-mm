@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'pack-mm'
-copyright = '2025, alin m elena'
+copyright = '2025-2026, alin m elena'
 author = 'alin m elena'
 
 # -- General configuration ---------------------------------------------------
@@ -28,6 +28,9 @@ exclude_patterns = []
 html_theme = "sphinx_immaterial"
 
 html_static_path = ['_static']
+html_css_files = ['custom.css']
+html_logo = "_static/pack-mm-light-notext.svg"
+html_favicon = "_static/pack-mm-light-notext.svg"
 
 # material theme options (see theme.conf for more information)
 html_theme_options = {
@@ -66,7 +69,7 @@ html_theme_options = {
                 "icon": "material/lightbulb-outline",
                 "name": "Switch to dark mode",
             },
-        },
+            },
         {
             "media": "(prefers-color-scheme: dark)",
             "scheme": "slate",

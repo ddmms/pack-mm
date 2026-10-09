@@ -3,6 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. raw:: html
+
+   <p align="center">
+     <picture>
+       <source media="(prefers-color-scheme: dark)" srcset="_static/pack-mm-dark-text.svg">
+       <source media="(prefers-color-scheme: light)" srcset="_static/pack-mm-light-text.svg">
+       <img alt="pack-mm logo" src="_static/pack-mm-light-text.svg" width="300">
+     </picture>
+   </p>
+
 pack-mm documentation
 =====================
 
