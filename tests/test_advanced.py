@@ -45,10 +45,14 @@ def test_packmm_hmc(tmp_path):
     assert (tmp_path / "1H2O.cif").exists()
     assert (tmp_path / "2H2O.cif").exists()
     f = read(tmp_path / "2H2O.cif")
-    assert f[0].position == pytest.approx([7.80392521, 6.18966536, 5.23146723], abs=0.05)
+    assert f[0].position == pytest.approx(
+        [7.80392521, 6.18966536, 5.23146723], abs=0.05
+    )
     assert (tmp_path / "2H2O-opt.cif").exists()
     f = read(tmp_path / "2H2O-opt.cif")
-    assert f[0].position == pytest.approx([7.80392521, 6.18966536, 5.23146723], abs=0.05)
+    assert f[0].position == pytest.approx(
+        [7.80392521, 6.18966536, 5.23146723], abs=0.05
+    )
 
 
 def test_packmm_every(tmp_path):
